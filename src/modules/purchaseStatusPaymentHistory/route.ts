@@ -1,0 +1,31 @@
+import { IRoute } from "@core/interfaces";
+import { Router } from "express";
+import { PurchaseOrderStatusController } from "./controller";
+import { AuthMiddleware, errorMiddleware } from "@core/middleware";
+
+class PurchaseOrderStatusRoute implements IRoute {
+    public path = '/purchase-status-payment-history';
+    public router = Router();
+
+    public controller = new PurchaseOrderStatusController();
+
+    constructor() {
+        this.initializeRoutes();
+    }
+
+    private initializeRoutes() {
+        this.router.post(this.path + '/', AuthMiddleware.authorization(true), this.controller.create);
+        this.router.get(this.path + '/findById/:id', AuthMiddleware.authorization(true), this.controller.findById);
+        this.router.get(this.path + '/findLastestById/:orderId', AuthMiddleware.authorization(true), this.controller.findOrderStatusLastestByOrderId);
+        this.router.get(this.path + '/findAllOrderStatusPaymentById/:orderId', AuthMiddleware.authorization(true), this.controller.findAllOrderStatusByOrderId);
+        this.router.get(this.path + '/', AuthMiddleware.authorization(true), this.controller.searchs);
+        this.router.delete(this.path + '/delete-rows', AuthMiddleware.authorization(true), this.controller.deleteRows);
+        this.router.put(this.path + '/update-list-publish', AuthMiddleware.authorization(true), this.controller.updateListPublish);
+        this.router.put(this.path + '/:id', AuthMiddleware.authorization(true), this.controller.update);
+        this.router.delete(this.path + '/:id', AuthMiddleware.authorization(true), this.controller.delete);
+        this.router.put(this.path + '/update-order-status/:orderId', AuthMiddleware.authorization(true), this.controller.updateOrderStatus);
+        this.router.put(this.path + '/update-publish/:id', AuthMiddleware.authorization(true), this.controller.updatePublish);
+    }
+}
+
+export default PurchaseOrderStatusRoute;
